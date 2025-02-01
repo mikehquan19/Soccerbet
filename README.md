@@ -25,7 +25,7 @@ It's also a possibility that I will replace CSS code with TailwindCSS.
 
 ## How to run
 
-The app will be deployed soon, and there is a demo available in ```src/assets/Soccerapps Demo.mp4```. But below is the guide to run them locally: 
+The app will be deployed soon, and there is a demo available in [youtube](https://youtu.be/XBiFR8ICMPc). But below is the guide to run them locally: 
 
 ### 1/ Prerequisites
 Before getting started, make sure that you have [Node.JS](https://nodejs.org/en) installed. If not, please visit the website for the download and installation guide. 
