@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inconsolata:wght@200..900&display=swap');
+
+@media only screen and (min-width: 500px) {
+  .navbar {
+    width: 20%;
+    text-align: center;
+  }
+}
+
+.navbar-wrapper {
+  background-color: darkslategrey;
+  font-family: 'Barlow Condensed', serif;
+  font-weight: 500;
+  font-style: normal;
+  color: skyblue;
+
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 5;
+
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.app-title {
+  font-size: 1.75rem;
+  padding: 0.25rem;
+}
+
+.navbar {
+  width: 50%;
+  margin-left: 15%;
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 1.5rem;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+.navbar div {
+  font-size: 1.3rem;
+  padding: 0.3rem;
+  display: flex; 
+  align-items: center;
+}

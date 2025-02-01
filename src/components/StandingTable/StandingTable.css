@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inconsolata:wght@200..900&display=swap');
+
+.table-wrapper {
+    font-family: 'Barlow Condensed', serif;
+    font-style: normal;
+
+    overflow-x: scroll;
+    white-space: nowrap;
+    margin: 0.25rem auto 1.5rem auto;
+    border: 0.1rem solid darkcyan;
+    border-radius: 1rem;
+    overscroll-behavior: none;
+}
+
+@media only screen and (max-width: 1100px) {
+    .table-wrapper {height: 538px}
+}
+
+.standing-title {
+    font-family: 'Barlow Condensed', serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 1.5rem;
+    margin: 0 auto;
+    width: 95%;
+}
+
+@media only screen and (max-width: 600px) {
+    .standing-title {width: 100%}
+}
+
+@media only screen and (min-width: 600px) {
+    .table-wrapper {width: 95%}
+}
+
+.table-wrapper table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table-wrapper th:first-child, .table-wrapper td:first-child {
+    position: sticky;
+    left: 0;
+}
+
+.title-row {
+    position: sticky; 
+    top: 0;
+    z-index: 1;
+}
+
+.table-wrapper td, .table-wrapper th {
+    text-align: center;
+    font-size: 1.25rem;
+}
+
+.table-wrapper th {
+    padding: 0.75rem;
+    background-color: darkcyan;
+    color: white;
+}
+.table-wrapper td {
+    border-top: 0.1rem solid black;
+    padding: 0.3rem 0.7rem;
+    font-weight: 500;
+    background-color: antiquewhite;
+}
+
+.team-info-cell {
+    overflow-x: auto;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center; 
+    gap: 0.75rem;
+}
+
+.team-info-cell div {
+    display: flex;
+    align-items: center;
+}
+
+

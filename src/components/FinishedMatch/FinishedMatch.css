@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inconsolata:wght@200..900&display=swap');
+
+.overall-score-wrapper {
+    max-width: 700px;
+    border-radius: 1rem;
+    margin: 0 auto 1rem auto;
+}
+
+.background-score-wrapper {
+    background-image: url("https://i.pinimg.com/736x/8a/52/46/8a524616b4f1c943b40dea88932a1a5f.jpg");
+    border-radius: 0 0 1rem 1rem;
+}
+
+.score-title-wrapper {
+    background-color: lightslategrey;
+    border-radius: 1rem 1rem 0 0;
+    padding: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.score-title-wrapper h3 {
+    font-family: 'Barlow Condensed', serif;
+    font-weight: 500;
+    font-style: normal;
+    margin: 0;
+}
+
+.score-title-wrapper .date-wrapper h3 {
+    font-size: 1.25rem;
+    color: white;
+}
+
+.score-title-wrapper .status-wrapper {
+    background-color: skyblue;
+    color: darkblue;
+    border-radius: 1rem;
+    padding: 0.2rem 0.4rem;
+}
+
+.score-title-wrapper .status-wrapper h3 {
+    font-size: 1rem;
+}
+
+.updated-date-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    padding: 0.5rem;
+}
+
+.updated-date-wrapper h3 {
+    font-family: 'Barlow Condensed', serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 1.25rem;
+    color: white;
+    margin: 0;
+}
+
+.updated-date-wrapper button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    border: 0.1rem solid black; 
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    border-color: white;
+}
+
+.match-score-wrapper {
+    /*border: 1px solid black;*/
+    margin: auto;
+    padding: 0.5rem;
+    display: grid; 
+    grid-template-columns: 1fr auto 1fr;
+}
+
+/*.score-team-wrapper {
+    border: 1px solid black;
+}*/
+
+.score-team-wrapper h3 {
+    font-family: 'Barlow Condensed', serif;
+    font-weight: 500;
+    font-style: normal;
+    color: white;
+
+    font-size: 1.2rem;
+    margin: 0;
+    text-align: center;
+}
+
+@media only screen and (max-width: 500px) {
+    .home h3 {text-align: left;}
+    .away h3 {text-align: right;}
+}
+
+.score-wrapper {
+    display: grid; 
+    grid-template-columns: 1fr auto 1fr;
+    /*border: 1px solid black;*/
+}
+
+.score-wrapper h2 {
+    font-family: 'Barlow Condensed', serif;
+    font-weight: 700;
+    font-style: normal;
+    color: white;
+
+    font-size: 1.75rem;
+    text-align: center;
+    width: 1.5rem;
+    /*border: 1px solid black;*/
+}
+
+img {
+    display: block;
+    margin: 0.5rem auto 0 auto;
+}
+
+.stat-list-wrapper {
+    border-top: 0.1rem solid black;
+    border-color: white;
+    padding: 0 1.5rem;
+}
+
+.stat-wrapper {
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.stat-wrapper h3, .stat-wrapper h2 {
+    color: white;
+    font-family: 'Barlow Condensed', serif;
+    font-weight: 500;
+    font-style: normal;
+
+    /* border: 1px solid black; */
+    margin: 0.75rem 0;
+}
+.stat-wrapper h3 {
+    font-size: 1.25rem;
+    text-align: center;
+}
+
+.home-stat {text-align: left}
+.away-stat {text-align: right}
