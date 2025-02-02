@@ -31,7 +31,8 @@ export const BetInfoCard = ({ usedFor = "table", userBet }) => {
   return (
     <div className={`${usedFor}-bet-info-cell`}>
       <div className="cell-child-wrapper ">
-        <div style={{ fontSize: fontSizes[0], color: 'yellowgreen' }}>{userBet.bet_info.match_name}</div>
+      <div style={{ fontSize: "1.2rem", color: "yellowgreen"}}>{userBet.bet_info.match_league}</div>
+        <div style={{ fontSize: fontSizes[0], color: 'yellowgreen' }}>{userBet.bet_info.match_name}, {userBet.bet_info.match_time}</div>
         <div className="main-info-part" style={{ fontSize: fontSizes[1] }}>
           {
             userBet.bet_info.under_or_over !== undefined ? (

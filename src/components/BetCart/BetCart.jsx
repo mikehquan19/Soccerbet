@@ -34,7 +34,10 @@ const BetCart = ({handleHideItself}) => {
                   userBetList.map(userBet =>
                     <div key={userBet.bet_info.id} className="bet-pick-wrapper">
                       <div className="x-sign" onClick={() => dispatch(deleteBet(userBet.bet_info.id))}><FontAwesomeIcon icon={faX} /></div>
-                      <div className="bet-match-name">{userBet.bet_info.match_name}</div>
+                      <div className="bet-match-name">
+                        <div>{userBet.bet_info.match_league},</div> 
+                        <div>{userBet.bet_info.match_name} {userBet.bet_info.match_time}</div>
+                      </div>
                       <div className="bet-info-wrapper">
                         <h3>{capitalizeFirstLetter(userBet.bet_info.time_type)}</h3>
                         {

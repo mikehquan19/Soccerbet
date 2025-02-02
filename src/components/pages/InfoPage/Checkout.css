@@ -22,6 +22,8 @@
 }
 
 .checkout-bet-list-wrapper {
+    width: 80%;
+    margin: 1rem auto 0 auto;
     margin-top: 1rem;
     border: 0.1rem solid black;
     padding-bottom: 0.5rem;

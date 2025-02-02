@@ -76,9 +76,10 @@
 }
 
 .bet-match-name {
-    font-size: 1.1rem;
-    text-align: center;
-    margin-bottom: 0.75rem;
+    font-size: 1.25rem;
+    color: goldenrod;
+    width: 85%;
+    margin: 0 auto 0.75rem auto; 
 }
 
 .bet-info-wrapper {
