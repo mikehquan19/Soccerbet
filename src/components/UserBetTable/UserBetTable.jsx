@@ -50,7 +50,10 @@ const Pagination = ({ betsPerPage, numBets, handlePagination}) => {
   const [clickedNumber, setClickedNumber] = React.useState(1);
   const [firstIndex, setFirstIndex] = React.useState(0); 
   
-  React.useEffect(() => setClickedNumber(firstIndex + 1), [firstIndex])
+  React.useEffect(() => {
+    setClickedNumber(firstIndex + 1);
+    handlePagination(firstIndex + 1);
+  }, [firstIndex])
 
   const pageNumbers = []; // the array of the numbers in the page
   for (let i = 1; i <= Math.ceil(numBets / betsPerPage); i++) {
