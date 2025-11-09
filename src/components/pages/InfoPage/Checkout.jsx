@@ -1,17 +1,13 @@
-import { BetInfoCard } from "./InfoPage"
+import { BetInfoCard } from './InfoPage'
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { clear } from "../../../redux/reducer";
-import { useNavigate } from "react-router-dom";
-import { soccerappClient } from "../../../provider/api";
-import "./Checkout.css"
-
+import { clear } from "@redux/reducer"
+import { useNavigate } from "react-router-dom"
+import { soccerappClient } from "@provider/api"
 
 const CheckOut = () => {
   const userBetList = useSelector(state => state.userBetList)
   const dispatch = useDispatch()
-  console.log(userBetList)
-
   const [userBalance, setUserBalance] = React.useState(null)
   const [usedToConfirm, setUsedToConfirm] = React.useState(false)
   const [confirmedBetList, setConfirmedBetList] = React.useState([])
@@ -19,42 +15,28 @@ const CheckOut = () => {
   const navigate = useNavigate(); 
 
   useEffect(() => {
-    // if the list of user bets is empty, reroute to the main page
-    if (userBetList.length === 0) { navigate("/") }
+    if (userBetList.length === 0) navigate("/")
 
-    // get the balance of the user if used to actually check out
     if (!usedToConfirm) {
       soccerappClient.get(`/detail`)
-        .then((response) => {
-          const userBalance = response.data.balance;
-          setUserBalance(userBalance);
-        })
+        .then((response) => setUserBalance(response.data.balance))
         .catch((error) => console.log(error))
     }
   }, [])
 
-  // find the total bet amount 
-  let totalBetAmount = 0;
+  let totalBetAmount = 0
   userBetList.forEach(userBet => totalBetAmount += Number(userBet.bet_amount))
 
-  // categorize the unordered list of user bets 
   const organizeUserBet = () => {
-    var userBetObj = { moneyline: [], handicap: [], total: [] };
-    for (var i = 0; i < userBetList.length; i++) {
-      if (userBetList[i].bet_info.under_or_over != undefined) {
-        userBetObj.total.push(userBetList[i]);
-      }
-      else if (userBetList[i].bet_info.handicap_cover != undefined) {
-        userBetObj.handicap.push(userBetList[i]);
-      }
-      else {
-        userBetObj.moneyline.push(userBetList[i]);
-      }
-    }
-    return userBetObj;
+    const userBetObj = { moneyline: [], handicap: [], total: [] }
+    userBetList.forEach(bet => {
+      if (bet.bet_info.under_or_over !== undefined) userBetObj.total.push(bet)
+      else if (bet.bet_info.handicap_cover !== undefined) userBetObj.handicap.push(bet)
+      else userBetObj.moneyline.push(bet)
+    })
+    return userBetObj
   }
 
-  // call the POST API to add the categorized bets 
   const postUserBets = (organizedUserBets) => {
     let postRequestArr = [];
     ["moneyline", "handicap", "total"].map(betType => {
@@ -62,81 +44,110 @@ const CheckOut = () => {
         postRequestArr.push(soccerappClient.post(`/${betType}_bets`, organizedUserBets[betType]))
       }
     })
-    // call the chained API endpoints 
+
     Promise.all(postRequestArr)
       .then((response) => {
-        let returnedBetArr = [];
-        for (var i = 0; i < response.length; i++) {
-          // notify
-          console.log("Status for returning first type of bet: " + response[i].status);
-          returnedBetArr = returnedBetArr.concat(response[i].data);
-        }
-        // set status of confirmation & new array of user bets for confirmation 
-        setUsedToConfirm(true);
-        setConfirmedBetList(returnedBetArr);
-        // clear the user bet list in Redux store 
-        dispatch(clear());
+        let returnedBetArr = []
+        response.forEach(res => {
+          console.log("Status for returning first type of bet:", res.status)
+          returnedBetArr = returnedBetArr.concat(res.data)
+        })
+        setUsedToConfirm(true)
+        setConfirmedBetList(returnedBetArr)
+        dispatch(clear())
       })
-      .catch(error => console.log(error));
-    return true; 
+      .catch(error => console.log(error))
+    return true
   }
 
-  // render the page based on confirmation status 
   if (usedToConfirm) {
     return (
-      <>
-        <div className="checkout-bet-list-wrapper">
-          <h2 className="checkout-bet-title">You have successfully placed these bets:</h2>
-          {confirmedBetList.map(userBet =>
-            <div className="checkout-bet-wrapper" key={userBet.bet_info.id}>
-              <BetInfoCard userBet={userBet} usedFor="nontable" />
-            </div>
-          )}
+      <div className="ml-40">
+        <div className="w-4/5 mx-auto mt-4">
+          <h2 className="font-medium bg-[darkslategrey] text-sky-400 text-xl p-2 rounded-t-lg">
+            You have successfully placed these bets:
+          </h2>
+          <div className="border-1 rounded-b-lg">
+            {confirmedBetList.map(userBet => (
+              <div
+                key={userBet.bet_info.id}
+                className="my-4 mx-2 p-4 border-2 rounded-lg font-medium"
+              >
+                <BetInfoCard userBet={userBet} usedFor="nontable" />
+              </div>
+            ))}
+          </div>
         </div>
-        <button 
+
+        <button
           onClick={() => navigate("/userbet")}
-          style={{border: "none", borderRadius: "0.5rem", fontSize: "1rem", display: "block", margin: "1rem auto", padding: "0.3rem", backgroundColor: "darkslategrey", color: "skyblue"}}>
-          Go To Info</button>
-      </>
+          className="block mx-auto mt-4 border-none rounded-md text-lg font-medium bg-[darkslategrey] text-sky-400 px-3 py-1"
+        >
+          Go To Info
+        </button>
+      </div>
     )
-  }
-  else {
+  } else {
     return (
-      <div className="checkout-layout">
-        <div className="checkout-bet-list-wrapper">
-          <h2 className="checkout-bet-title">Your picked bets:</h2>
-          {userBetList.map(userBet =>
-            <div className="checkout-bet-wrapper" key={userBet.bet_info.id}>
-              <BetInfoCard userBet={userBet} usedFor="nontable" />
+      <div className="ml-40">
+        <div className="w-9/10 mx-auto grid grid-cols-[2fr_1fr] gap-4 mt-10">
+          <div className="w-full mx-auto border-1 rounded-lg shadow-lg">
+            <h2 className="text-xl font-semibold bg-[darkslategrey] text-sky-400 p-2 rounded-t-lg">
+              Your picked bets:
+            </h2>
+            {userBetList.map(userBet => (
+              <div
+                key={userBet.bet_info.id}
+                className="my-4 mx-2 p-2 border-2 rounded-xl font-medium"
+              >
+                <BetInfoCard userBet={userBet} usedFor="nontable" />
+              </div>
+            ))}
+          </div>
+
+          {/* Summary Section */}
+          <div>
+            <div className="w-full mx-auto border-black pb-2 rounded-xl shadow-lg">
+              <h2 className="font-semibold bg-[darkslategrey] text-sky-400 text-xl p-2 rounded-t-xl">
+                Summary
+              </h2>
+
+              <div className="font-medium text-xl">
+                <div className="flex justify-between w-9/10 mx-auto my-2">
+                  <div>Balance:</div>
+                  <div>{userBalance} tokens</div>
+                </div>
+                <hr className="w-9/10 mx-auto" />
+                <div className="flex justify-between w-9/10 mx-auto my-2">
+                  <div>Total bet amount:</div>
+                  <div>{totalBetAmount} tokens</div>
+                </div>
+                <div className="flex justify-between w-9/10 mx-auto my-2">
+                  <div>Fee (5%):</div>
+                  <div>{(totalBetAmount * 0.05).toFixed(2)} tokens</div>
+                </div>
+                <hr className="w-9/10 mx-auto" />
+                <div className="flex justify-between w-9/10 mx-auto my-2 text-[goldenrod] text-2xl">
+                  <div>Total:</div>
+                  <div>{(totalBetAmount * 1.05).toFixed(2)} tokens</div>
+                </div>
+              </div>
             </div>
-          )}
-        </div>
-        <div>
-          <div className="checkout-bet-list-wrapper">
-            <h2 className="checkout-bet-title">Summary</h2>
-            <div className="checkout-info-wrapper">
-              <div className="checkout-info">
-                <div>Balance:</div><div>${userBalance}</div>
-              </div>
-              <hr style={{ width: "95%" }} />
-              <div className="checkout-info"><div>Total bet amount:</div><div>${totalBetAmount}</div></div>
-              <div className="checkout-info">
-                <div>Fee and taxes (5%):</div><div>${(totalBetAmount * 0.05).toFixed(2)}</div>
-              </div>
-              <hr style={{ width: "95%" }} />
-              <div className="checkout-info" style={{ fontSize: "1.5rem", color: "goldenrod" }}>
-                <div>Total:</div><div>${(totalBetAmount * 1.05).toFixed(2)}</div>
-              </div>
+
+            <div
+              className="font-semibold text-xl bg-[darkslategray] text-white mt-4 py-2 shadow-lg text-center rounded-lg cursor-pointer hover:bg-[darkslateblue] transition-all"
+              onClick={() => {
+                const organizedUserBets = organizeUserBet(userBetList)
+                postUserBets(organizedUserBets)
+              }}
+            >
+              PLACE BET
             </div>
           </div>
-          <div className="checkout-button" onClick={async () => {
-            const organizedUserBets = organizeUserBet(userBetList);
-            postUserBets(organizedUserBets);
-          }}>PLACE BET</div>
         </div>
       </div>
     )
   }
 }
 
-export default CheckOut; 
+export default CheckOut

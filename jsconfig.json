@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@pages/*": ["./src/components/pages/*"],
+      "@tables/*": ["./src/components/tables/*"],
+      "@components/*": ["./src/components/*"],
+      "@provider/*": ["./src/provider/*"],
+      "@redux/*": ["./src/redux/*"],
+      "@data": ["./src/data.js"]
+    }
+  },
+  "include": ["src"]
+}

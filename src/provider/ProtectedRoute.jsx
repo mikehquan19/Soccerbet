@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import { REFRESH_TOKEN, ACCESS_TOKEN, soccerappClient } from './api'
+import { REFRESH_TOKEN, ACCESS_TOKEN, soccerappClient } from './api';
 
 export const LogoutRoute = () => {
   React.useEffect(() => {
@@ -11,7 +11,6 @@ export const LogoutRoute = () => {
       try {
         const response = await soccerappClient.post("/logout", { "refresh": refreshToken })
         console.log("Log out request: " + response.status)
-        // clear the tokens from the local storage 
         localStorage.clear();
       }
       catch (error) {

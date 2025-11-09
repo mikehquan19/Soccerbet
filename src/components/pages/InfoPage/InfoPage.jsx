@@ -1,107 +1,139 @@
-import React from 'react'
-import UserBetTable from '../../UserBetTable/UserBetTable'
-import { soccerappClient } from '../../../provider/api'
-import './InfoPage.css'
+import { createContext, useEffect, useState } from 'react'
+import UserBetTable from '@tables/UserBetTable/UserBetTable'
+import { soccerappClient } from '@provider/api'
 
-// the main context 
-export const UserBetContext = React.createContext();
+// Main context
+export const UserBetContext = createContext();
 
-// bet info card only displays the info of the user's bet, not the wrapper 
 export const BetInfoCard = ({ usedFor = "table", userBet }) => {
+  const capitalize = val =>
+    String(val).charAt(0).toUpperCase() + String(val).slice(1)
 
-  // upper case only the first letter of the word 
-  const capFirstLetter = (val) => {
-    return String(val).charAt(0).toUpperCase() + String(val).slice(1);
-  }
-
-  // if the bet is settled, print the correct outcome of the bet 
   const getAppropriateStatus = (betAmount, payout) => {
-    if (betAmount < payout) {
-      return "Win";
-    } else if (betAmount > payout) {
-      return "Lose";
-    } else {
-      return "Refund";
-    }
+    if (betAmount < payout) return "Win"
+    if (betAmount > payout) return "Lose"
+    return "Refund"
   }
-
-  var fontSizes = ["0.9rem", "1.1rem", "1rem"];
-  if (usedFor === "nontable") { fontSizes = ["1.15rem", "1.2rem", "1.25rem"]; }
 
   return (
-    <div className={`${usedFor}-bet-info-cell`}>
-      <div className="cell-child-wrapper ">
-      <div style={{ fontSize: "1.2rem", color: "yellowgreen"}}>{userBet.bet_info.match_league}</div>
-        <div style={{ fontSize: fontSizes[0], color: 'yellowgreen' }}>{userBet.bet_info.match_name}, {userBet.bet_info.match_time}</div>
-        <div className="main-info-part" style={{ fontSize: fontSizes[1] }}>
-          {
-            userBet.bet_info.under_or_over !== undefined ? (
-              <>
-                <span>{userBet.bet_info.under_or_over},</span>
-                <span>{userBet.bet_info.target_num_objects} {userBet.bet_info.bet_object} & {capFirstLetter(userBet.bet_info.time_type)},</span>
-              </>
-            ) : (
-              <>
-                <span>{userBet.bet_info.bet_team},</span>
-                {userBet.bet_info.handicap_cover !== undefined && (<span>{userBet.bet_info.handicap_cover}</span>)}
-                <span>{userBet.bet_info.bet_object} & {capFirstLetter(userBet.bet_info.time_type)},</span>
-              </>
-            )
-          }
-          <span style={{ color: 'skyblue' }}>@ {userBet.bet_info.odd > 0 ? (<span>+{userBet.bet_info.odd}</span>) : userBet.bet_info.odd}</span>
+    <div className={`text-lg ${usedFor === "table" ? "flex justify-between" : ""}`}>
+      {/* First child wrapper */}
+      <div>
+        <div className="text-xl my-1">
+          {userBet.bet_info.match_league}
+        </div>
+        <div className="text-xl text-[yellowgreen] my-1">
+          <span>{userBet.bet_info.match_name}, </span>
+          <span>{userBet.bet_info.match_time}</span>
+        </div>
+        <div className="flex flex-wrap gap-1 text-lg">
+          {userBet.bet_info.under_or_over !== undefined ? (
+            <>
+              <span>{userBet.bet_info.under_or_over},</span>
+              <span>{userBet.bet_info.target_num_objects} </span>
+              <span>{userBet.bet_info.bet_object} & </span>
+              <span>{capitalize(userBet.bet_info.time_type)},</span>
+            </>
+          ) : (
+            <>
+              <span>{userBet.bet_info.bet_team},</span>
+              {userBet.bet_info.handicap_cover && <span>{userBet.bet_info.handicap_cover}</span>}
+              <span>{userBet.bet_info.bet_object} & {capitalize(userBet.bet_info.time_type)},</span>
+            </>
+          )}
+          <span className="text-sky-400">
+            @ {userBet.bet_info.odd > 0 ? `+${userBet.bet_info.odd}` : userBet.bet_info.odd}
+          </span>
         </div>
       </div>
-      <div className="cell-child-wrapper" style={{ fontSize: fontSizes[2] }}>
+
+      {/* Second child wrapper */}
+      <div className={
+        `${
+          usedFor === "nontable" ? "text-right" : "flex flex-row items-center"
+        } text-lg`
+      }>
         {usedFor === "table" ? (
-          <div>{userBet.bet_info.status === "Settled" ?
-            getAppropriateStatus(Number(userBet.bet_amount), Number(userBet.payout)) : userBet.bet_info.status}</div>
-        ) : (<div>Bet amount: <span style={{ fontSize: "1.75rem" }}>${userBet.bet_amount}</span></div>)}
+          <div className="bg-[peru] text-white text-sm shadow-lg rounded p-1">
+            {userBet.bet_info.status === "Settled"
+              ? getAppropriateStatus(Number(userBet.bet_amount), Number(userBet.payout))
+              : userBet.bet_info.status}
+          </div>
+        ) : (
+          <div>
+            <span>Bet amount: </span>
+            <span className="text-3xl">{userBet.bet_amount} tokens</span>
+          </div>
+        )}
       </div>
     </div>
   )
 }
 
 const InfoPage = () => {
-  const [userInfo, setUserInfo] = React.useState({});
+  const [userInfo, setUserInfo] = useState({})
 
-  // this function could be passed as props 
   const getUserInfo = () => {
-    // get the info of the user 
     soccerappClient.get(`/detail`)
-      .then((response) => {
-        setUserInfo(response.data);
-      })
-      .catch((error) => console.log(error))
+      .then(res => setUserInfo(res.data))
+      .catch(err => console.log(err))
   }
-  React.useEffect(getUserInfo, [])
+
+  useEffect(getUserInfo, [])
 
   return (
-    <>
-      <div className='personal-info-wrapper'>
-        <div style={{ fontSize: "1.5rem", fontWeight: "600" }}>{userInfo.username}</div>
-        <div className="detail">
-          <div><h4 style={{ margin: "0" }}>First name:</h4> <span>{userInfo.first_name}</span></div>
-          <div><h4 style={{ margin: "0" }}>Last name:</h4> <span>{userInfo.last_name}</span></div>
-          <div><h4 style={{ margin: "0" }}>Email:</h4> <span>{userInfo.email}</span></div>
-          <div><h4 style={{ margin: "0" }}>Balance:</h4> <span style={{ fontSize: "1.5rem" }}>${userInfo.balance}</span></div>
+    <div className="ml-40 mt-4">
+      <div className="mx-auto rounded-xl font-normal w-4/5">
+        <div className="text-4xl font-semibold">{userInfo.username}</div>
+        <div className="grid grid-cols-2 gap-4 mt-4">
+          <div>
+            <h4 className="text-md">First name:</h4>
+            <span className="text-xl font-medium">{userInfo.first_name}</span>
+          </div>
+          <div>
+            <h4 className="text-md">Last name:</h4>
+            <span className="text-xl font-medium">{userInfo.last_name}</span>
+          </div>
+          <div>
+            <h4 className="text-md">Email:</h4>
+            <span className="text-xl font-medium">{userInfo.email}</span>
+          </div>
+          <div>
+            <h4 className="text-md">Balance:</h4>
+            <span className="text-xl font-medium">{userInfo.balance} Tokens</span>
+          </div>
         </div>
       </div>
-      <div>
-        <UserBetTable status="Unsettled" userInfo={userInfo} handleUpdateInfo={getUserInfo} />
-        <UserBetTable status="Unsettled" betType="Handicap" userInfo={userInfo} handleUpdateInfo={getUserInfo} />
-        <UserBetTable status="Unsettled" betType="Total" userInfo={userInfo} handleUpdateInfo={getUserInfo} />
+
+      {/* Unsettled bets */}
+      <div className="mt-8 space-y-4">
+        <UserBetTable 
+          status="Unsettled" 
+          userInfo={userInfo} 
+          handleUpdateInfo={getUserInfo} 
+        />
+        <UserBetTable 
+          status="Unsettled"
+          betType="Handicap" 
+          userInfo={userInfo} 
+          handleUpdateInfo={getUserInfo} 
+        />
+        <UserBetTable 
+          status="Unsettled" 
+          betType="Total" 
+          userInfo={userInfo} 
+          handleUpdateInfo={getUserInfo} 
+        />
       </div>
 
-      
-
-      <div style={{marginTop: "5rem"}}>
+      {/* Settled bets */}
+      <div className="mt-20 space-y-4">
         <UserBetTable status="Settled" userInfo={userInfo} />
         <UserBetTable status="Settled" betType="Handicap" />
         <UserBetTable status="Settled" betType="Total" />
       </div>
-    </>
+    </div>
   )
 }
 
-
-export default InfoPage;
+export default InfoPage

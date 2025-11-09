@@ -9,14 +9,20 @@ export const userBetSlice = createSlice({
     addBet: (state, action) => {
       const betInfo = action.payload;
       if (betInfo !== null && betInfo !== undefined) {
-        for (var i = 0; i < state.length; i++) {
+        for (const stateItem of state) {
           // if the bet is already in the list, remove it
-          if (betInfo.id === state[i].bet_info.id) {
+          if (betInfo.id === stateItem.bet_info.id) {
             return state.filter(userBet => userBet.bet_info.id !== betInfo.id);
           }
         }
         // append the bet which is not already in the list 
-        return [...state, {bet_info: betInfo, bet_amount: "0" }]
+        return [
+          ...state, 
+          {
+            bet_info: betInfo, 
+            bet_amount: "0" 
+          }
+        ]
       }
     },
 
@@ -31,9 +37,12 @@ export const userBetSlice = createSlice({
     // used for bet cart 
     setBetAmount: (state, action) => {
       const argMap = action.payload;
-      return state.map(userBet => {
+      return state.map((userBet) => {
         if (userBet.bet_info.id === argMap.betInfoId) {
-          return { ...userBet, bet_amount: argMap.betAmount };
+          return { 
+            ...userBet, 
+            bet_amount: argMap.betAmount 
+          };
         }
         return userBet;
       });
